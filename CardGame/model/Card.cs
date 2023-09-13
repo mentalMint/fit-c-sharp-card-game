@@ -1,6 +1,7 @@
 ﻿namespace CardGame.model;
 
-public class Card
+public enum Card
 {
-    
+    Black,
+    Red,
 }

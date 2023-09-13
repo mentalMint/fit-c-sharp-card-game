@@ -1,19 +1,21 @@
-﻿using System.Numerics;
-
-namespace CardGame.model.strategies;
+﻿namespace CardGame.model;
 
 public interface IStrategy
 {
-    void SetCards(Vector<Card> cards);
-
     int GetCardNumber();
 }
 
 public abstract class Strategy : IStrategy
 {
-    private Vector<Card> _cards;
+    private CardDeck? _cards;
 
-    protected Strategy(Vector<Card> cards)
+    public CardDeck? Cards
+    {
+        get => _cards;
+        set => _cards = value ?? throw new ArgumentNullException(nameof(value));
+    }
+
+    protected Strategy(CardDeck? cards)
     {
         _cards = cards;
     }
@@ -22,16 +24,20 @@ public abstract class Strategy : IStrategy
     {
     }
 
-    public void SetCards(Vector<Card> cards)
-    {
-        _cards = cards;
-    }
-
     public abstract int GetCardNumber();
 }
 
 public class FirstCardStrategy : Strategy
+
 {
+    public FirstCardStrategy(CardDeck? cards) : base(cards)
+    {
+    }
+
+    public FirstCardStrategy()
+    {
+    }
+
     public override int GetCardNumber()
     {
         return 1;
