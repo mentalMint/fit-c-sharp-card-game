@@ -4,12 +4,12 @@ namespace CardGame.view;
 
 public class ConsoleView : IObserver<bool>
 {
-    private readonly Model _model;
+    private readonly Sandbox _sandbox;
 
-    public ConsoleView(Model model)
+    public ConsoleView(Sandbox sandbox)
     {
-        _model = model;
-        _model.Subscribe(this);
+        _sandbox = sandbox;
+        _sandbox.Subscribe(this);
     }
     
     public void OnCompleted()
@@ -24,13 +24,6 @@ public class ConsoleView : IObserver<bool>
 
     public void OnNext(bool cardColorsMatched)
     {
-        if (cardColorsMatched)
-        {
-            Console.WriteLine("Colors matched. Fight!");
-        }
-        else
-        {
-            Console.WriteLine("Colors didn't match. Not today(");
-        }
+        Console.WriteLine(cardColorsMatched ? "Colors matched. Fight!" : "Colors didn't match. Not today(");
     }
 }

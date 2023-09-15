@@ -2,6 +2,8 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CardGame", "CardGame\CardGame.csproj", "{FB84F541-7D94-4F81-BEC6-91583AC05D6F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Strategy", "Strategy\Strategy.csproj", "{B60B3DDD-1460-4D2C-BB3F-5D9A782492B7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +14,9 @@ Global
 		{FB84F541-7D94-4F81-BEC6-91583AC05D6F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FB84F541-7D94-4F81-BEC6-91583AC05D6F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FB84F541-7D94-4F81-BEC6-91583AC05D6F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B60B3DDD-1460-4D2C-BB3F-5D9A782492B7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B60B3DDD-1460-4D2C-BB3F-5D9A782492B7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B60B3DDD-1460-4D2C-BB3F-5D9A782492B7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B60B3DDD-1460-4D2C-BB3F-5D9A782492B7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

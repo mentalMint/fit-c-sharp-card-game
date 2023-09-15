@@ -1,4 +1,4 @@
-﻿namespace CardGame.model;
+﻿namespace CardGameStrategy;
 
 public interface IStrategy
 {
@@ -14,6 +14,8 @@ public abstract class Strategy : IStrategy
         get => _cards;
         set => _cards = value ?? throw new ArgumentNullException(nameof(value));
     }
+    
+    public string Thing { get;  set; }
 
     protected Strategy(CardDeck? cards)
     {

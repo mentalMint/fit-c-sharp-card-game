@@ -1,4 +1,4 @@
-﻿namespace CardGame.model;
+﻿namespace CardGameStrategy;
 
 static class RandomExtensions
 {
@@ -24,14 +24,14 @@ public class CardDeck
         _cards = cards;
     }
 
-    public static CardDeck NewCardDeck()
+    public static CardDeck NewCardDeck(int cardsNumber)
     {
-        var cards = new Card[36];
-        for (int i = 0; i < cards.Length / 2; i++)
+        var cards = new Card[cardsNumber];
+        for (var i = 0; i < cards.Length / 2; i++)
         {
             cards[i] = Card.Black;
         }
-        for (int i = cards.Length / 2; i < cards.Length; i++)
+        for (var i = cards.Length / 2; i < cards.Length; i++)
         {
             cards[i] = Card.Red;
         }

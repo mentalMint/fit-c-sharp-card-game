@@ -23,8 +23,8 @@ public abstract class Observable : IObservable<bool>
 
         public Unsubscriber(List<IObserver<bool>> observers, IObserver<bool> observer)
         {
-            this._observers = observers;
-            this._observer = observer;
+            _observers = observers;
+            _observer = observer;
         }
 
         public void Dispose()

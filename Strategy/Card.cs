@@ -1,4 +1,4 @@
-﻿namespace CardGame.model;
+﻿namespace CardGameStrategy;
 
 public enum Card
 {
