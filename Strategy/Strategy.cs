@@ -1,4 +1,6 @@
-﻿namespace CardGameStrategy;
+﻿using Cards;
+namespace Strategy;
+
 
 public interface IStrategy
 {

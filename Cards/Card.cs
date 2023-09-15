@@ -1,4 +1,4 @@
-﻿namespace CardGameStrategy;
+﻿namespace Cards;
 
 public enum Card
 {

@@ -1,5 +1,6 @@
-﻿using CardGame.model;
-using CardGameStrategy;
+﻿using CardGame;
+using Cards;
+using Strategy;
 
 void ClearCurrentConsoleLine()
 {

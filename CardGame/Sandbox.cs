@@ -1,16 +1,17 @@
-﻿using CardGameStrategy;
+﻿using Cards;
+using Strategy;
 
-namespace CardGame.model;
+namespace CardGame;
 
-public class Sandbox : Observable
+public class Sandbox
 {
     private readonly CardDeck _cardDeck;
-    private readonly Strategy _ilonsStrategy;
-    private readonly Strategy _marksStrategy;
+    private readonly Strategy.Strategy _ilonsStrategy;
+    private readonly Strategy.Strategy _marksStrategy;
 
     public bool CardsColorsMatched { get; private set; } = false;
 
-    public Sandbox(CardDeck cardDeck, Strategy ilonsStrategy, Strategy marksStrategy)
+    public Sandbox(CardDeck cardDeck, Strategy.Strategy ilonsStrategy, Strategy.Strategy marksStrategy)
     {
         _cardDeck = cardDeck;
         _ilonsStrategy = ilonsStrategy ?? throw new ArgumentNullException(nameof(ilonsStrategy));
@@ -22,7 +23,6 @@ public class Sandbox : Observable
         _cardDeck.Shuffle();
         _cardDeck.SplitMidPoint(out var ilonsCards, out var marksCards);
         _ilonsStrategy.Cards = ilonsCards;
-        _marksStrategy.Thing = "aaaa"; 
         _marksStrategy.Cards = marksCards;
         var ilonsNumber = _ilonsStrategy.GetCardNumber();
         var marksNumber = _marksStrategy.GetCardNumber();
@@ -34,11 +34,6 @@ public class Sandbox : Observable
         if (marksCards.Cards[ilonsNumber].Equals(ilonsCards.Cards[marksNumber]))
         {
             CardsColorsMatched = true;
-        }
-
-        foreach (var observer in Observers)
-        {
-            observer.OnNext(CardsColorsMatched);
         }
     }
 }
