@@ -6,32 +6,32 @@ namespace CardGame;
 public class Sandbox
 {
     private readonly CardDeck _cardDeck;
-    private readonly Strategy.Strategy _ilonsStrategy;
-    private readonly Strategy.Strategy _marksStrategy;
+    private readonly Player _ilon;
+    private readonly Player _mark;
 
     public bool CardsColorsMatched { get; private set; } = false;
 
-    public Sandbox(CardDeck cardDeck, Strategy.Strategy ilonsStrategy, Strategy.Strategy marksStrategy)
+    public Sandbox(CardDeck cardDeck, Player ilon, Player mark)
     {
         _cardDeck = cardDeck;
-        _ilonsStrategy = ilonsStrategy ?? throw new ArgumentNullException(nameof(ilonsStrategy));
-        _marksStrategy = marksStrategy ?? throw new ArgumentNullException(nameof(marksStrategy));
+        this._ilon = ilon;
+        this._mark = mark;
     }
 
     public void Run()
     {
         _cardDeck.Shuffle();
-        _cardDeck.SplitMidPoint(out var ilonsCards, out var marksCards);
-        _ilonsStrategy.Cards = ilonsCards;
-        _marksStrategy.Cards = marksCards;
-        var ilonsNumber = _ilonsStrategy.GetCardNumber();
-        var marksNumber = _marksStrategy.GetCardNumber();
-        if (ilonsCards == null || marksCards == null)
+        _cardDeck.SplitMidPoint(out var ilonsCardDeck, out var marksCardDeck);
+        _ilon.CardDeck = ilonsCardDeck;
+        _mark.CardDeck = marksCardDeck;
+        var ilonsNumber = _ilon.GetCardNumber();
+        var marksNumber = _mark.GetCardNumber();
+        if (ilonsCardDeck == null || marksCardDeck == null)
         {
             return;
         }
 
-        if (marksCards.Cards[ilonsNumber].Equals(ilonsCards.Cards[marksNumber]))
+        if (marksCardDeck.Cards[ilonsNumber].Equals(ilonsCardDeck.Cards[marksNumber]))
         {
             CardsColorsMatched = true;
         }

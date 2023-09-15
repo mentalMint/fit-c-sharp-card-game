@@ -11,21 +11,27 @@ void ClearCurrentConsoleLine()
 }
 
 var successCount = 0;
+const int cardsCount = 36;
+var cardDeck = CardDeck.NewCardDeck(cardsCount);
 Console.WriteLine("Start");
 Console.Write(0 + "%");
 for (var i = 1; i <= 1_000_000; i++)
 {
-    const int cardsNumber = 36;
-    var model = new Sandbox(CardDeck.NewCardDeck(cardsNumber), new FirstCardStrategy(), new FirstCardStrategy());
-    // var consoleView = new ConsoleView(model);
+    var model = new Sandbox(cardDeck,
+        new Player(new FirstCardStrategy()), 
+        new Player(new FirstCardStrategy()));
     model.Run();
     if (model.CardsColorsMatched)
     {
         successCount++;
     }
 
-    ClearCurrentConsoleLine();
-    Console.Write(100 * (float)successCount / i + "%");
+    if (i % 10000 == 0)
+    {
+        ClearCurrentConsoleLine();
+        Console.Write(100 * (float)successCount / i + "%");
+    }
 }
 
+Console.WriteLine();
 Console.WriteLine("Finnish");
