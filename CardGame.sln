@@ -1,5 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.7.34031.279
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CardGame", "CardGame\CardGame.csproj", "{FB84F541-7D94-4F81-BEC6-91583AC05D6F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Strategy", "Strategy\Strategy.csproj", "{B60B3DDD-1460-4D2C-BB3F-5D9A782492B7}"
@@ -30,5 +33,11 @@ Global
 		{EF268F1B-8218-4625-B567-767719A0FEE0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EF268F1B-8218-4625-B567-767719A0FEE0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EF268F1B-8218-4625-B567-767719A0FEE0}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {DC889CC8-FE7F-43B7-83D2-7A651428D628}
 	EndGlobalSection
 EndGlobal

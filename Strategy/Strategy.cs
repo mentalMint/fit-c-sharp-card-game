@@ -9,9 +9,9 @@ public interface IStrategy
 
 public abstract class Strategy : IStrategy
 {
-    private CardDeck? _cardDeckDeck;
+    private ICardDeck? _cardDeckDeck;
 
-    public CardDeck? CardDeck
+    public ICardDeck? CardDeck
     {
         get => _cardDeckDeck;
         set => _cardDeckDeck = value ?? throw new ArgumentNullException(nameof(value));

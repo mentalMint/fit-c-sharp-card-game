@@ -13,18 +13,41 @@ static class RandomExtensions
     }
 }
 
-public class CardDeck
+public interface ICardDeck
+{
+    
+    Card[] Cards { get; }
+    void Shuffle();
+
+    void SplitMidPoint(out ICardDeck? firstDeck, out ICardDeck? secondDeck);
+}
+
+public class CardDeck : ICardDeck
 {
     private readonly Card[] _cards;
 
     public Card[] Cards => _cards;
 
-    public CardDeck(Card[] cards)
+    public CardDeck(int cardsNumber)
+    {
+        _cards = new Card[cardsNumber];
+        for (var i = 0; i < _cards.Length / 2; i++)
+        {
+            _cards[i] = Card.Black;
+        }
+        for (var i = _cards.Length / 2; i < _cards.Length; i++)
+        {
+            _cards[i] = Card.Red;
+        }
+
+    }
+
+    private CardDeck(Card[] cards)
     {
         _cards = cards;
     }
 
-    public static CardDeck NewCardDeck(int cardsNumber)
+    public static ICardDeck NewHalfRedCardDeck(int cardsNumber)
     {
         var cards = new Card[cardsNumber];
         for (var i = 0; i < cards.Length / 2; i++)
@@ -44,18 +67,18 @@ public class CardDeck
         rng.Shuffle(_cards);
     }
     
-    private void Split<T>(T[] array, int index, out T[] first, out T[] second) {
+    private void SplitArray<T>(T[] array, int index, out T[] first, out T[] second) {
         first = array.Take(index).ToArray();
         second = array.Skip(index).ToArray();
     }
 
-    private void SplitMidPoint<T>(T[] array, out T[] first, out T[] second) {
-        Split(array, array.Length / 2, out first, out second);
+    private void SplitArrayMidPoint<T>(T[] array, out T[] first, out T[] second) {
+        SplitArray(array, array.Length / 2, out first, out second);
     }
 
-    public void SplitMidPoint(out CardDeck? firstDeck, out CardDeck? secondDeck)
+    public void SplitMidPoint(out ICardDeck firstDeck, out ICardDeck secondDeck)
     {
-        SplitMidPoint(_cards, out var first, out var second);
+        SplitArrayMidPoint(_cards, out var first, out var second);
         firstDeck = new CardDeck(first);
         secondDeck = new CardDeck(second);
     }

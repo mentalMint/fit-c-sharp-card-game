@@ -1,37 +1,28 @@
-﻿using CardGame;
-using Cards;
+﻿using Cards;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Strategy;
 
-void ClearCurrentConsoleLine()
-{
-    var currentLineCursor = Console.CursorTop;
-    Console.SetCursorPosition(0, Console.CursorTop);
-    Console.Write(new string(' ', Console.WindowWidth));
-    Console.SetCursorPosition(0, currentLineCursor);
-}
+namespace CardGame;
 
-var successCount = 0;
-const int cardsCount = 36;
-var cardDeck = CardDeck.NewCardDeck(cardsCount);
-Console.WriteLine("Start");
-Console.Write(0 + "%");
-for (var i = 1; i <= 1_000_000; i++)
+static class Program
 {
-    var model = new Sandbox(cardDeck,
-        new Player(new FirstCardStrategy()), 
-        new Player(new FirstCardStrategy()));
-    model.Run();
-    if (model.CardsColorsMatched)
+    private static IHostBuilder CreateHostBuilder()
     {
-        successCount++;
+        return Host.CreateDefaultBuilder()
+            .ConfigureServices((hostContext, services) =>
+            {
+                services.AddHostedService<CollisiumExperimentWorker>();
+                services.AddScoped<ISandbox, CollisiumSandbox>();
+                services.AddScoped<ICardDeck>(s => new CardDeck(36));
+                services.AddScoped<Player>(_ => new Player("Ilon", new FirstCardStrategy()));
+                services.AddScoped<Player>(_ => new Player("Mark", new FirstCardStrategy()));
+            });
     }
 
-    if (i % 10000 == 0)
+    static void Main(string[] args)
     {
-        ClearCurrentConsoleLine();
-        Console.Write(100 * (float)successCount / i + "%");
+        var host = CreateHostBuilder().Build();
+        host.Run();
     }
 }
-
-Console.WriteLine();
-Console.WriteLine("Finnish");

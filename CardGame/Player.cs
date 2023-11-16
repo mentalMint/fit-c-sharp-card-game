@@ -1,13 +1,23 @@
-﻿using Cards;
+﻿using System.Collections;
+using Cards;
+using Strategy;
 
 namespace CardGame;
 
-public class Player
+public interface IPlayer
 {
+    ICardDeck CardDeck { get; set; }
+    int GetCardNumber();
+}
+
+public class Player : IPlayer
+{
+    public string _name;
     private readonly Strategy.Strategy _strategy;
 
-    private CardDeck _cardDeck;
-    public CardDeck CardDeck
+    private ICardDeck _cardDeck;
+
+    public ICardDeck CardDeck
     {
         get => _cardDeck;
         set
@@ -17,8 +27,9 @@ public class Player
         }
     }
 
-    public Player(Strategy.Strategy strategy)
+    public Player(string name, Strategy.Strategy strategy)
     {
+        _name = name;
         _strategy = strategy ?? throw new ArgumentNullException(nameof(strategy));
     }
 

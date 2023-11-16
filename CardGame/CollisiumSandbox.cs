@@ -1,21 +1,28 @@
 ﻿using Cards;
-using Strategy;
+using Microsoft.Extensions.Hosting;
 
 namespace CardGame;
 
-public class Sandbox
+public interface ISandbox
 {
-    private readonly CardDeck _cardDeck;
-    private readonly Player _ilon;
-    private readonly Player _mark;
+    void Run();
+    bool CardsColorsMatched { get; }
+}
 
+public class CollisiumSandbox : ISandbox
+{
+    private readonly ICardDeck _cardDeck;
+    private readonly IEnumerable<Player> _players;
+    private IPlayer _ilon;
+    private IPlayer _mark;
     public bool CardsColorsMatched { get; private set; } = false;
 
-    public Sandbox(CardDeck cardDeck, Player ilon, Player mark)
+    public CollisiumSandbox(ICardDeck cardDeck, IEnumerable<Player> players)
     {
         _cardDeck = cardDeck;
-        this._ilon = ilon;
-        this._mark = mark;
+        _players = players;
+        _ilon = _players.ElementAt(0);
+        _mark = _players.ElementAt(1);
     }
 
     public void Run()
@@ -28,12 +35,15 @@ public class Sandbox
         var marksNumber = _mark.GetCardNumber();
         if (ilonsCardDeck == null || marksCardDeck == null)
         {
-            return;
+            throw new NullReferenceException();
         }
 
         if (marksCardDeck.Cards[ilonsNumber].Equals(ilonsCardDeck.Cards[marksNumber]))
         {
             CardsColorsMatched = true;
+            return;
         }
+
+        CardsColorsMatched = false;
     }
 }
