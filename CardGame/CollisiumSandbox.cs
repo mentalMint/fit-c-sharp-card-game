@@ -13,7 +13,7 @@ public class CollisiumSandbox : ISandbox
 {
     private readonly ICardDeck _cardDeck;
     private readonly IEnumerable<Player> _players;
-    private IPlayer _ilon;
+    private IPlayer _elon;
     private IPlayer _mark;
     public bool CardsColorsMatched { get; private set; } = false;
 
@@ -21,24 +21,24 @@ public class CollisiumSandbox : ISandbox
     {
         _cardDeck = cardDeck;
         _players = players;
-        _ilon = _players.ElementAt(0);
+        _elon = _players.ElementAt(0);
         _mark = _players.ElementAt(1);
     }
 
     public void Run()
     {
         _cardDeck.Shuffle();
-        _cardDeck.SplitMidPoint(out var ilonsCardDeck, out var marksCardDeck);
-        _ilon.CardDeck = ilonsCardDeck;
+        _cardDeck.SplitMidPoint(out var elonsCardDeck, out var marksCardDeck);
+        _elon.CardDeck = elonsCardDeck;
         _mark.CardDeck = marksCardDeck;
-        var ilonsNumber = _ilon.GetCardNumber();
+        var elonsNumber = _elon.GetCardNumber();
         var marksNumber = _mark.GetCardNumber();
-        if (ilonsCardDeck == null || marksCardDeck == null)
+        if (elonsCardDeck == null || marksCardDeck == null)
         {
             throw new NullReferenceException();
         }
 
-        if (marksCardDeck.Cards[ilonsNumber].Equals(ilonsCardDeck.Cards[marksNumber]))
+        if (marksCardDeck.Cards[elonsNumber].Equals(elonsCardDeck.Cards[marksNumber]))
         {
             CardsColorsMatched = true;
             return;

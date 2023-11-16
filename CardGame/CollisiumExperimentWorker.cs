@@ -23,7 +23,6 @@ public class CollisiumExperimentWorker : BackgroundService
     protected override Task ExecuteAsync(CancellationToken stoppingToken)
     {
         var successCount = 0;
-        const int cardsCount = 36;
         Console.WriteLine("Start");
         Console.Write(0 + "%");
 

@@ -15,7 +15,7 @@ static class Program
                 services.AddHostedService<CollisiumExperimentWorker>();
                 services.AddScoped<ISandbox, CollisiumSandbox>();
                 services.AddScoped<ICardDeck>(s => new CardDeck(36));
-                services.AddScoped<Player>(_ => new Player("Ilon", new FirstCardStrategy()));
+                services.AddScoped<Player>(_ => new Player("Elon", new FirstCardStrategy()));
                 services.AddScoped<Player>(_ => new Player("Mark", new FirstCardStrategy()));
             });
     }

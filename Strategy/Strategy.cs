@@ -9,17 +9,17 @@ public interface IStrategy
 
 public abstract class Strategy : IStrategy
 {
-    private ICardDeck? _cardDeckDeck;
+    private ICardDeck? _cardDeck;
 
     public ICardDeck? CardDeck
     {
-        get => _cardDeckDeck;
-        set => _cardDeckDeck = value ?? throw new ArgumentNullException(nameof(value));
+        get => _cardDeck;
+        set => _cardDeck = value ?? throw new ArgumentNullException(nameof(value));
     }
     
-    protected Strategy(CardDeck? cardDeckDeck)
+    protected Strategy(CardDeck? cardDeck)
     {
-        _cardDeckDeck = cardDeckDeck;
+        _cardDeck = cardDeck;
     }
 
     protected Strategy()
@@ -30,9 +30,8 @@ public abstract class Strategy : IStrategy
 }
 
 public class FirstCardStrategy : Strategy
-
 {
-    public FirstCardStrategy(CardDeck? cardDeckDeck) : base(cardDeckDeck)
+    public FirstCardStrategy(CardDeck? cardDeck) : base(cardDeck)
     {
     }
 
