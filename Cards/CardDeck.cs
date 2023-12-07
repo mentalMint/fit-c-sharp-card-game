@@ -1,4 +1,6 @@
-﻿namespace Cards;
+﻿using System.Text;
+
+namespace Cards;
 
 static class RandomExtensions
 {
@@ -21,7 +23,6 @@ public interface ICardDeck
     void SplitMidPoint(out ICardDeck? firstDeck, out ICardDeck? secondDeck);
 
     (ICardDeck firstDeck, ICardDeck secondDeck) SplitMidPoint();
-
 }
 
 public class CardDeck : ICardDeck
@@ -41,6 +42,15 @@ public class CardDeck : ICardDeck
         for (var i = _cards.Length / 2; i < _cards.Length; i++)
         {
             _cards[i] = new Card(Color.Red);
+        }
+    }
+
+    public CardDeck(string cardsOrder)
+    {
+        _cards = new Card[cardsOrder.Length];
+        for (int i = 0; i < cardsOrder.Length; i++)
+        {
+            _cards[i] = (new Card(cardsOrder[i] == 'R' ? Color.Red : Color.Black));
         }
     }
 
@@ -70,7 +80,7 @@ public class CardDeck : ICardDeck
         SplitArray(array, array.Length / 2, out first, out second);
     }
 
-    public  void SplitMidPoint(out ICardDeck firstDeck, out ICardDeck secondDeck)
+    public void SplitMidPoint(out ICardDeck firstDeck, out ICardDeck secondDeck)
     {
         SplitArrayMidPoint(_cards, out var first, out var second);
         firstDeck = new CardDeck(first);
@@ -82,5 +92,16 @@ public class CardDeck : ICardDeck
         SplitMidPoint(out var first, out var second);
 
         return (first, second);
+    }
+
+    public override string ToString()
+    {
+        var stringBuilder = new StringBuilder("");
+        foreach (var card in Cards)
+        {
+            stringBuilder.Append(card.color == Color.Black ? "B" : "R");
+        }
+
+        return stringBuilder.ToString();
     }
 }

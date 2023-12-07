@@ -6,6 +6,9 @@ namespace CardGame;
 public interface ISandbox
 {
     void Run();
+
+    void Run(ICardDeck cardDeck);
+
     bool CardsColorsMatched { get; }
 }
 
@@ -15,6 +18,11 @@ public class ColosseumSandbox : ISandbox
     private readonly IEnumerable<Player> _players;
     private IPlayer _elon;
     private IPlayer _mark;
+    public void Run(ICardDeck cardDeck)
+    {
+        throw new NotImplementedException();
+    }
+
     public bool CardsColorsMatched { get; private set; } = false;
 
     public ColosseumSandbox(ICardDeck cardDeck, IEnumerable<Player> players)
@@ -32,6 +40,7 @@ public class ColosseumSandbox : ISandbox
             Console.WriteLine(card.color);
         }
     }
+
     public void Run()
     {
         _cardDeck.Shuffle();
@@ -55,11 +64,16 @@ public class ColosseumSandboxNotShuffle : ISandbox
     private readonly IEnumerable<Player> _players;
     private IPlayer _elon;
     private IPlayer _mark;
+
+    public void Run()
+    {
+        throw new NotImplementedException();
+    }
+
     public bool CardsColorsMatched { get; private set; } = false;
 
-    public ColosseumSandboxNotShuffle(ICardDeck cardDeck, IEnumerable<Player> players)
+    public ColosseumSandboxNotShuffle(IEnumerable<Player> players)
     {
-        _cardDeck = cardDeck;
         _players = players;
         _elon = _players.ElementAt(0);
         _mark = _players.ElementAt(1);
@@ -72,9 +86,10 @@ public class ColosseumSandboxNotShuffle : ISandbox
             Console.WriteLine(card.color);
         }
     }
-    public void Run()
+
+    public void Run(ICardDeck cardDeck)
     {
-        var t = _cardDeck.SplitMidPoint();
+        var t = cardDeck.SplitMidPoint();
         _elon.CardDeck = t.firstDeck;
         _mark.CardDeck = t.secondDeck;
         var elonsNumber = _elon.GetCardNumber();
