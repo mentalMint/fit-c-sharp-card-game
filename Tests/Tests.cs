@@ -12,27 +12,18 @@ public class CardDeckTests
     {
     }
 
-    private int GetNumberOfCardsOfColor(ICardDeck cardDeck, Color color)
+    private int GetCountOfCardsOfColor(ICardDeck cardDeck, Color color)
     {
         var cards = cardDeck.Cards;
-        int cardsOfColorNumber = 0;
-        foreach (var card in cards)
-        {
-            if (card.color == color)
-            {
-                cardsOfColorNumber++;
-            }
-        }
-
-        return cardsOfColorNumber;
+        return cards.Count(card => card.color == color);
     }
 
     [Test]
     public void CreateCardDeck_36_Contains18RedAnd18Black()
     {
         var cardDeck = new CardDeck(36);
-        Assert.That(GetNumberOfCardsOfColor(cardDeck, Color.Red), Is.EqualTo(18));
-        Assert.That(GetNumberOfCardsOfColor(cardDeck, Color.Black), Is.EqualTo(18));
+        Assert.That(GetCountOfCardsOfColor(cardDeck, Color.Red), Is.EqualTo(18));
+        Assert.That(GetCountOfCardsOfColor(cardDeck, Color.Black), Is.EqualTo(18));
     }
 }
 
@@ -60,17 +51,17 @@ public class StrategyTests
     }
 
     [Test]
-    public void FirstCardStrategyReturnsBlack()
+    public void GetCardNumber_FirstCardStrategy_ReturnsBlack()
     {
         var cards = CreateCardsWithFirstBlack(36);
         var mockCardDeck = Mock.Of<CardDeck>();
         var strategy = new FirstCardStrategy(mockCardDeck);
-        int cardNumber = strategy.GetCardNumber();
+        var cardNumber = strategy.GetCardNumber();
         Assert.That(cards[cardNumber].color, Is.EqualTo(Color.Black));
     }
 }
 
-public class CollisiumExperimentTest
+public class ColosseumExperimentTest
 {
     [SetUp]
     public void Setup()
@@ -78,23 +69,70 @@ public class CollisiumExperimentTest
     }
 
     [Test]
-    public void FirstCardStrategyReturnsBlack()
+    public void PlayersGetCardNumber_ShuffledDecks_FirstCardsNumbers()
     {
         var elon = new Player("Elon", new FirstCardStrategy());
         var mark = new Player("Mark", new FirstCardStrategy());
         var cardDeck = new CardDeck(36);
+        cardDeck.Shuffle();
         cardDeck.SplitMidPoint(out var elonsCardDeck, out var marksCardDeck);
         elon.CardDeck = elonsCardDeck;
         mark.CardDeck = marksCardDeck;
         var elonsNumber = elon.GetCardNumber();
         var marksNumber = mark.GetCardNumber();
-        if (elonsCardDeck == null || marksCardDeck == null)
+        var elonsCard = elonsCardDeck.Cards[0];
+        var marksCard = marksCardDeck.Cards[0];
+
+        var cardsColorsMatched = elonsCardDeck.Cards[elonsNumber].color.Equals(marksCardDeck.Cards[marksNumber].color);
+
+        Assert.That(cardsColorsMatched, Is.EqualTo(elonsCard.color == marksCard.color));
+    }
+
+    private Card[] CreateCards(int cardsNumber)
+    {
+        var cards = new Card[cardsNumber];
+        for (var i = 0; i < cards.Length / 2; i++)
         {
-            throw new NullReferenceException();
+            cards[i] = new Card(Color.Black);
         }
 
-        bool cardsColorsMatched = marksCardDeck.Cards[elonsNumber].Equals(elonsCardDeck.Cards[marksNumber]);
-        
-        Assert.That(cardsColorsMatched, Is.EqualTo(true));
+        for (var i = cards.Length / 2; i < cards.Length; i++)
+        {
+            cards[i] = new Card(Color.Red);
+        }
+
+        return cards;
+    }
+
+    [Test]
+    public void DeckShuffles_Once()
+    {
+        var mockCardDeck = new Mock<ICardDeck>();
+        var tuple = (new CardDeck(18), new CardDeck(18));
+        mockCardDeck.Setup(cd => cd.SplitMidPoint()).Returns(tuple);
+        var elon = new Player("Elon", new FirstCardStrategy());
+        var mark = new Player("Mark", new FirstCardStrategy());
+        var players = new[] { elon, mark };
+        var closseumSandbox = new ColosseumSandbox(mockCardDeck.Object, players);
+        closseumSandbox.Run();
+        mockCardDeck.Verify(cd => cd.Shuffle(), Times.Once);
+    }
+
+    [Test]
+    public void ColosseumExperiment_ShuffledDeckFirstCardStrategy_Success()
+    {
+        var mockCardDeck = new Mock<ICardDeck>();
+
+        var tuple = (new CardDeck(18), new CardDeck(18));
+
+        mockCardDeck.Setup(cd => cd.SplitMidPoint()).Returns(tuple);
+        var colosseumSandbox = new ColosseumSandbox(mockCardDeck.Object,
+            new[]
+            {
+                new Player("Elon", new FirstCardStrategy()),
+                new Player("Mark", new FirstCardStrategy())
+            });
+        colosseumSandbox.Run();
+        Assert.That(colosseumSandbox.CardsColorsMatched, Is.EqualTo(true));
     }
 }

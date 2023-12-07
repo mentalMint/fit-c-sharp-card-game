@@ -19,6 +19,9 @@ public interface ICardDeck
     void Shuffle();
 
     void SplitMidPoint(out ICardDeck? firstDeck, out ICardDeck? secondDeck);
+
+    (ICardDeck firstDeck, ICardDeck secondDeck) SplitMidPoint();
+
 }
 
 public class CardDeck : ICardDeck
@@ -50,7 +53,7 @@ public class CardDeck : ICardDeck
     {
     }
 
-    public void Shuffle()
+    public virtual void Shuffle()
     {
         var rng = new Random();
         rng.Shuffle(_cards);
@@ -67,10 +70,17 @@ public class CardDeck : ICardDeck
         SplitArray(array, array.Length / 2, out first, out second);
     }
 
-    public void SplitMidPoint(out ICardDeck firstDeck, out ICardDeck secondDeck)
+    public  void SplitMidPoint(out ICardDeck firstDeck, out ICardDeck secondDeck)
     {
         SplitArrayMidPoint(_cards, out var first, out var second);
         firstDeck = new CardDeck(first);
         secondDeck = new CardDeck(second);
+    }
+
+    public (ICardDeck firstDeck, ICardDeck secondDeck) SplitMidPoint()
+    {
+        SplitMidPoint(out var first, out var second);
+
+        return (first, second);
     }
 }

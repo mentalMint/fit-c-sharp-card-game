@@ -41,6 +41,6 @@ public class FirstCardStrategy : Strategy
 
     public override int GetCardNumber()
     {
-        return 1;
+        return 0;
     }
 }

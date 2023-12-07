@@ -3,9 +3,9 @@ using Microsoft.Extensions.Hosting;
 
 namespace CardGame;
 
-public class CollisiumExperimentWorker : BackgroundService
+public class ColosseumExperimentWorker : BackgroundService
 {
-    private readonly ISandbox _collisiumSandbox;
+    private readonly ISandbox _colosseumSandbox;
 
     private static void ClearCurrentConsoleLine()
     {
@@ -15,9 +15,9 @@ public class CollisiumExperimentWorker : BackgroundService
         Console.SetCursorPosition(0, currentLineCursor);
     }
 
-    public CollisiumExperimentWorker(ISandbox collisiumSandbox, ICardDeck cardDeck, IEnumerable<Player> players)
+    public ColosseumExperimentWorker(ISandbox colosseumSandbox)
     {
-        _collisiumSandbox = collisiumSandbox;
+        _colosseumSandbox = colosseumSandbox;
     }
 
     protected override Task ExecuteAsync(CancellationToken stoppingToken)
@@ -26,10 +26,10 @@ public class CollisiumExperimentWorker : BackgroundService
         Console.WriteLine("Start");
         Console.Write(0 + "%");
 
-        for (var i = 1; i <= 1_000_000; i++)
+        for (var i = 1; i <= 100; i++)
         {
-            _collisiumSandbox.Run();
-            if (_collisiumSandbox.CardsColorsMatched)
+            _colosseumSandbox.Run();
+            if (_colosseumSandbox.CardsColorsMatched)
             {
                 successCount++;
             }
