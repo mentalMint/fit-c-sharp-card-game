@@ -48,9 +48,10 @@ public class ColosseumExperimentWorker : BackgroundService
     }
 }
 
-public class ColosseumExperimentWorkerDB : BackgroundService
+public class ColosseumExperimentConditionWorker : BackgroundService
 {
     private readonly ISandbox _colosseumSandbox;
+    private readonly ColosseumContext _colosseumContext;
 
     private static void ClearCurrentConsoleLine()
     {
@@ -60,36 +61,64 @@ public class ColosseumExperimentWorkerDB : BackgroundService
         Console.SetCursorPosition(0, currentLineCursor);
     }
 
-    public ColosseumExperimentWorkerDB(ISandbox colosseumSandbox)
+    public ColosseumExperimentConditionWorker(ISandbox colosseumSandbox, ColosseumContext colosseumContext)
     {
         _colosseumSandbox = colosseumSandbox;
+        _colosseumContext = colosseumContext;
     }
 
     protected override Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        using var db = new ColosseumContext();
-        var experimentalConditions = db.experimental_conditions.ToList();
+        _colosseumContext.Database.EnsureCreated();
+        foreach (var cardDeck in CardDeckGenerator.Generate(100))
+        {
+            _colosseumContext.Add(new ExperimentalCondition { CardsOrder = cardDeck.ToString() });
+        }
 
+        _colosseumContext.SaveChanges();
+        return Task.CompletedTask;
+    }
+}
+
+public class ColosseumExperimentWorkerDb : BackgroundService
+{
+    private readonly ISandbox _colosseumSandbox;
+    private readonly ColosseumContext _colosseumContext;
+
+    private static void ClearCurrentConsoleLine()
+    {
+        var currentLineCursor = Console.CursorTop;
+        Console.SetCursorPosition(0, Console.CursorTop);
+        Console.Write(new string(' ', Console.WindowWidth));
+        Console.SetCursorPosition(0, currentLineCursor);
+    }
+
+    public ColosseumExperimentWorkerDb(ISandbox colosseumSandbox, ColosseumContext colosseumContext)
+    {
+        _colosseumSandbox = colosseumSandbox;
+        _colosseumContext = colosseumContext;
+    }
+
+    protected override Task ExecuteAsync(CancellationToken stoppingToken)
+    {
+        _colosseumContext.Database.EnsureCreated();
+        Console.WriteLine("Querying for an experimental condition");
+        var experimentalConditions = _colosseumContext.ExperimentalConditions
+            .OrderBy(b => b.CardsOrder);
         var successCount = 0;
-        Console.WriteLine("Start");
-        Console.Write(0 + "%");
-
         var i = 0;
         foreach (var experimentalCondition in experimentalConditions)
         {
-            var cardDeck = new CardDeck(experimentalCondition.cards_order);
-            Console.WriteLine(cardDeck.ToString());
+            i++;    
+            var cardDeck = new CardDeck(experimentalCondition.CardsOrder);
             _colosseumSandbox.Run(cardDeck);
             if (_colosseumSandbox.CardsColorsMatched)
             {
                 successCount++;
             }
-
-            ClearCurrentConsoleLine();
-            Console.Write(100 * (float) successCount / i + "%");
-            i++;
         }
 
+        Console.Write(100 * (float)successCount / i + "%");
         Console.WriteLine();
         Console.WriteLine("Finnish");
         return Task.CompletedTask;

@@ -1,24 +1,26 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
 namespace DataBase;
 
-public class ColosseumContext: DbContext
+public class ColosseumContext : DbContext
 {
-    public DbSet<ExperimentalCondition> experimental_conditions { get; set; }
-    
-    public ColosseumContext()
-    {
+    public DbSet<ExperimentalCondition> ExperimentalConditions { get; set; }
 
+    public ColosseumContext(DbContextOptions<ColosseumContext> options) : base(options)
+    {
     }
 
-    // The following configures EF to create a Sqlite database file in the
-    // special "local" folder for your platform.
     protected override void OnConfiguring(DbContextOptionsBuilder options)
-        => options.UseSqlite("Data Source=D:\\Studies\\C#\\CardGame\\colosseum.sqlite");
+        // => options.UseSqlite("Data Source=D:\\Studies\\C#\\CardGame\\colosseum.sqlite");
+        => options.UseSqlite("Data Source=colosseum.db");
 }
 
+[Table("experimental_conditions")]
+[PrimaryKey("Id")]
 public class ExperimentalCondition
 {
-    public int id { get; set; }
-    public string cards_order { get; set; }
+    [Column("id")] public int Id { get; set; }
+
+    [Column("cards_order")] public string CardsOrder { get; set; }
 }

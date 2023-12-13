@@ -1,6 +1,5 @@
 ﻿using Cards;
 using DataBase;
-using Microsoft.Data.Sqlite;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Strategy;
@@ -21,31 +20,35 @@ internal static class Program
                 services.AddScoped<Player>(_ => new Player("Mark", new FirstCardStrategy()));
             });
     }
+
+    private static IHostBuilder CreateHostBuilderExperimentalConditions()
+    {
+        return Host.CreateDefaultBuilder()
+            .ConfigureServices((hostContext, services) =>
+            {
+                services.AddHostedService<ColosseumExperimentConditionWorker>();
+                services.AddScoped<ISandbox, ColosseumSandboxNotShuffle>();
+                services.AddScoped<Player>(_ => new Player("Elon", new FirstCardStrategy()));
+                services.AddScoped<Player>(_ => new Player("Mark", new FirstCardStrategy()));
+                services.AddDbContext<ColosseumContext>();
+            });
+    }
     
     private static IHostBuilder CreateHostBuilderDb()
     {
         return Host.CreateDefaultBuilder()
             .ConfigureServices((hostContext, services) =>
             {
-                services.AddHostedService<ColosseumExperimentWorkerDB>();
+                services.AddHostedService<ColosseumExperimentWorkerDb>();
                 services.AddScoped<ISandbox, ColosseumSandboxNotShuffle>();
                 services.AddScoped<Player>(_ => new Player("Elon", new FirstCardStrategy()));
                 services.AddScoped<Player>(_ => new Player("Mark", new FirstCardStrategy()));
+                services.AddDbContext<ColosseumContext>();
             });
     }
 
     private static void Main()
     {
-        using var db = new ColosseumContext();
-        foreach (var cardDeck in CardDeckGenerator.Generate(100))
-        {
-            db.Add(new ExperimentalCondition { cards_order = cardDeck.ToString() });
-            // Console.WriteLine(cardDeck.ToString());
-        }
-        db.SaveChanges();
-
-        
-//
 // // Create
 //         Console.WriteLine("Inserting a new experimental condition");
 //         db.Add(new ExperimentalCondition { cards_order = "RBRB" });
