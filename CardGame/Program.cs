@@ -70,7 +70,46 @@ internal static class Program
 //         db.Remove(experimentalCondition);
 //         db.SaveChanges();
 
+
         var host = CreateHostBuilderDb().Build();
         host.Run();
+    }
+    
+    static async Task SendPostRequest()
+    {
+        // Replace the URL with the actual endpoint you want to send the POST request to
+        string apiUrl = "https://example.com/api/endpoint";
+
+        // Data to be sent in the request body (you can replace this with your own data)
+        string postData = "{\"key\": \"value\"}";
+
+        // Create an instance of HttpClient
+        using (HttpClient httpClient = new HttpClient())
+        {
+            // Create the content to be sent in the request body
+            HttpContent content = new StringContent(postData, System.Text.Encoding.UTF8, "application/json");
+
+            try
+            {
+                // Send the POST request and get the response
+                HttpResponseMessage response = await httpClient.PostAsync(apiUrl, content);
+
+                // Check if the request was successful (status code 2xx)
+                if (response.IsSuccessStatusCode)
+                {
+                    // Read and output the response content
+                    string responseContent = await response.Content.ReadAsStringAsync();
+                    Console.WriteLine("Response: " + responseContent);
+                }
+                else
+                {
+                    Console.WriteLine("Error: " + response.StatusCode);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Exception: " + ex.Message);
+            }
+        }
     }
 }

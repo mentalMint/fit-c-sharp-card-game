@@ -102,3 +102,46 @@ public class ColosseumSandboxNotShuffle : ISandbox
         CardsColorsMatched = t.firstDeck.Cards[elonsNumber].color.Equals(t.secondDeck.Cards[marksNumber].color);
     }
 }
+
+public class ColosseumSandboxWeb : ISandbox
+{
+    private readonly ICardDeck _cardDeck;
+    private readonly IEnumerable<Player> _players;
+    private IPlayer _elon;
+    private IPlayer _mark;
+
+    public void Run()
+    {
+        throw new NotImplementedException();
+    }
+
+    public bool CardsColorsMatched { get; private set; } = false;
+
+    public ColosseumSandboxWeb(IEnumerable<Player> players)
+    {
+        _players = players;
+        _elon = _players.ElementAt(0);
+        _mark = _players.ElementAt(1);
+    }
+
+    private void PrintCards(Card[] cards)
+    {
+        foreach (var card in cards)
+        {
+            Console.WriteLine(card.color);
+        }
+    }
+
+    public void Run(ICardDeck cardDeck)
+    {
+        var t = cardDeck.SplitMidPoint();
+        var elonsTask = _elon.GetCardNumber(t.firstDeck);
+        var marksTask = _mark.GetCardNumber(t.secondDeck);
+        if (t.firstDeck == null || t.secondDeck == null)
+        {
+            throw new NullReferenceException();
+        }
+
+        CardsColorsMatched = t.firstDeck.Cards[elonsTask.].color.Equals(t.secondDeck.Cards[marksTask].color);
+    }
+}

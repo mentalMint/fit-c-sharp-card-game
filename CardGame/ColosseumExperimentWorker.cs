@@ -124,3 +124,48 @@ public class ColosseumExperimentWorkerDb : BackgroundService
         return Task.CompletedTask;
     }
 }
+
+public class ColosseumExperimentWorkerWeb : BackgroundService
+{
+    private readonly ISandbox _colosseumSandbox;
+    private readonly ColosseumContext _colosseumContext;
+
+    private static void ClearCurrentConsoleLine()
+    {
+        var currentLineCursor = Console.CursorTop;
+        Console.SetCursorPosition(0, Console.CursorTop);
+        Console.Write(new string(' ', Console.WindowWidth));
+        Console.SetCursorPosition(0, currentLineCursor);
+    }
+
+    public ColosseumExperimentWorkerWeb(ISandbox colosseumSandbox, ColosseumContext colosseumContext)
+    {
+        _colosseumSandbox = colosseumSandbox;
+        _colosseumContext = colosseumContext;
+    }
+
+    protected override Task ExecuteAsync(CancellationToken stoppingToken)
+    {
+        _colosseumContext.Database.EnsureCreated();
+        Console.WriteLine("Querying for an experimental condition");
+        var experimentalConditions = _colosseumContext.ExperimentalConditions
+            .OrderBy(b => b.CardsOrder);
+        var successCount = 0;
+        var i = 0;
+        foreach (var experimentalCondition in experimentalConditions)
+        {
+            i++;    
+            var cardDeck = new CardDeck(experimentalCondition.CardsOrder);
+            _colosseumSandbox.Run(cardDeck);
+            if (_colosseumSandbox.CardsColorsMatched)
+            {
+                successCount++;
+            }
+        }
+
+        Console.Write(100 * (float)successCount / i + "%");
+        Console.WriteLine();
+        Console.WriteLine("Finnish");
+        return Task.CompletedTask;
+    }
+}

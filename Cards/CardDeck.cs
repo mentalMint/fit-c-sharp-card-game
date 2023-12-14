@@ -54,7 +54,7 @@ public class CardDeck : ICardDeck
         }
     }
 
-    private CardDeck(Card[] cards)
+    public CardDeck(Card[] cards)
     {
         _cards = cards;
     }
