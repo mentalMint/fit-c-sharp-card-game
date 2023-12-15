@@ -62,6 +62,7 @@ internal static class Program
 
     private static void Main()
     {
+        // var host = CreateHostBuilderExperimentalConditions().Build();
         var host = CreateHostBuilderWeb().Build();
         host.Run();
     }

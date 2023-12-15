@@ -1,5 +1,6 @@
 ﻿using Cards;
 using DataBase;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
 
 namespace CardGame;
@@ -103,8 +104,7 @@ public class ColosseumExperimentWorkerDb : BackgroundService
     {
         _colosseumContext.Database.EnsureCreated();
         Console.WriteLine("Querying for an experimental condition");
-        var experimentalConditions = _colosseumContext.ExperimentalConditions
-            .OrderBy(b => b.CardsOrder);
+        var experimentalConditions = _colosseumContext.ExperimentalConditions;
         var successCount = 0;
         var i = 0;
         foreach (var experimentalCondition in experimentalConditions)
@@ -148,11 +148,10 @@ public class ColosseumExperimentWorkerWeb : BackgroundService
     {
         _colosseumContext.Database.EnsureCreated();
         Console.WriteLine("Querying for an experimental condition");
-        var experimentalConditions = _colosseumContext.ExperimentalConditions
-            .OrderBy(b => b.CardsOrder);
+        var experimentalConditions = _colosseumContext.ExperimentalConditions.ToListAsync(cancellationToken: stoppingToken);
         var successCount = 0;
         var i = 0;
-        foreach (var experimentalCondition in experimentalConditions)
+        foreach (var experimentalCondition in experimentalConditions.Result)
         {
             i++;    
             var cardDeck = new CardDeck(experimentalCondition.CardsOrder);

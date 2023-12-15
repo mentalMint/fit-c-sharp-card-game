@@ -37,7 +37,7 @@ public class DbTests
         context.Add(new ExperimentalCondition { CardsOrder = new CardDeck(36).ToString() });
         context.SaveChanges();
 
-        var condition = context.Find<ExperimentalCondition>(1);
+        var condition = context.ExperimentalConditions.Find(1);
         Assert.That(condition, Is.Not.Null);
     }
 

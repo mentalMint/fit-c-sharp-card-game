@@ -24,6 +24,22 @@ public class PlayerController : ControllerBase
         var jsonContent = Newtonsoft.Json.JsonConvert.SerializeObject(response);
         return Ok(jsonContent);
     }
+  
+    [HttpPost]
+    public Task<ActionResult<GetCardNumberResponse>> Post2([FromBody] PlayerModel model)
+    {
+        var player = new Player("", new FirstCardStrategy())
+        {
+            CardDeck = new CardDeck(model.Order)
+        };
+        var response = new GetCardNumberResponse()
+        {
+            CardNumber = player.GetCardNumber()
+        };
+
+        return Task.FromResult<ActionResult<GetCardNumberResponse>>(Ok(response));
+    }
+
     
     [HttpGet]
     public IActionResult Get()
