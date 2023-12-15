@@ -1,6 +1,7 @@
-﻿namespace Players.Models;
+﻿using Cards;
 
-public class PlayerModel
+namespace Players.Models;
+
+public class PlayerModel : CardDTO
 {
-    public string Name { get; set; }
 }

@@ -161,9 +161,10 @@ public class ColosseumExperimentWorkerWeb : BackgroundService
             {
                 successCount++;
             }
+            Console.WriteLine(100 * (float) successCount / i + "%");
         }
 
-        Console.Write(100 * (float)successCount / i + "%");
+        Console.WriteLine(100 * (float)successCount / i + "%");
         Console.WriteLine();
         Console.WriteLine("Finnish");
         return Task.CompletedTask;

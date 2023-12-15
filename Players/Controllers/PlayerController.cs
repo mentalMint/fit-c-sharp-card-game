@@ -1,5 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using CardGame;
+using Cards;
+using Microsoft.AspNetCore.Mvc;
 using Players.Models;
+using Strategy;
 
 namespace Players.Controllers;
 
@@ -9,16 +12,22 @@ public class PlayerController : ControllerBase
     [HttpPost]
     public IActionResult Post([FromBody] PlayerModel model)
     {
-        // Handle the posted data
-        // Example: return the received data
-        return Ok(model);
+        var player = new Player("", new FirstCardStrategy())
+        {
+            CardDeck = new CardDeck(model.Order)
+        };
+        var response = new GetCardNumberResponse()
+        {
+            CardNumber = player.GetCardNumber()
+        };
+
+        var jsonContent = Newtonsoft.Json.JsonConvert.SerializeObject(response);
+        return Ok(jsonContent);
     }
     
     [HttpGet]
     public IActionResult Get()
     {
-        // Handle the posted data
-        // Example: return the received data
         return Ok();
     }
 }

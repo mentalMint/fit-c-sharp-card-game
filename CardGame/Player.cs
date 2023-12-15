@@ -1,8 +1,4 @@
-﻿using System.Collections;
-using System.Text.Json.Nodes;
-using Cards;
-using Newtonsoft.Json;
-using Strategy;
+﻿using Cards;
 using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace CardGame;
@@ -12,7 +8,7 @@ public interface IPlayer
     ICardDeck CardDeck { get; set; }
     int GetCardNumber();
 
-    Task GetCardNumber<GetCardNumberResponse?>(ICardDeck cardDeck);
+    Task<GetCardNumberResponse> GetCardNumber(ICardDeck cardDeck, string url);
 }
 
 public class Player : IPlayer
@@ -43,12 +39,7 @@ public class Player : IPlayer
         return _strategy.GetCardNumber();
     }
 
-    public Task GetCardNumber<GetCardNumberResponse>(ICardDeck cardDeck)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task GetCardNumber(ICardDeck cardDeck)
+    public Task<GetCardNumberResponse> GetCardNumber(ICardDeck cardDeck, string url)
     {
         throw new NotImplementedException();
     }
@@ -71,7 +62,7 @@ public class WebPlayer : IPlayer
         }
     }
 
-    public async Task<GetCardNumberResponse?> GetCardNumber(ICardDeck cardDeck)
+    public async Task<GetCardNumberResponse> GetCardNumber(ICardDeck cardDeck, string url)
     {
         var cardDto = new CardDTO
         {
@@ -80,17 +71,12 @@ public class WebPlayer : IPlayer
 
         // Convert the DTO to JSON
         var jsonContent = Newtonsoft.Json.JsonConvert.SerializeObject(cardDto);
-        return await SendPostRequest(jsonContent);
+        return await SendPostRequest(jsonContent, url);
     }
 
-    class GetCardNumberResponse
+    private static async Task<GetCardNumberResponse> SendPostRequest(string postData, string url)
     {
-        public int CardNumber;
-    }
-
-    private static async Task<GetCardNumberResponse?> SendPostRequest(string postData)
-    {
-        var apiUrl = "https://example.com/api/cards";
+        var apiUrl = url;
         using var httpClient = new HttpClient();
         HttpContent content = new StringContent(postData, System.Text.Encoding.UTF8, "application/json");
         try
@@ -100,7 +86,8 @@ public class WebPlayer : IPlayer
             if (response.IsSuccessStatusCode)
             {
                 Console.WriteLine("Response: " + responseContent);
-                return JsonSerializer.Deserialize<GetCardNumberResponse>(responseContent);
+                return JsonSerializer.Deserialize<GetCardNumberResponse>(responseContent) ??
+                       new GetCardNumberResponse() { CardNumber = 0 };
             }
             else
             {
